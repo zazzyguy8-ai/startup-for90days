@@ -43,6 +43,17 @@
 - [x] Verified for real: generated a project, `npm install && npm run build` clean, `npm start` + curl → core API returns structured output, landing serves validated headline
 - [x] Verified UI: generate CTA for older kits, generation, file browser, zip click, reload persistence — zero errors
 
+## Feature: Stripe paywall + publish
+- [x] Free 3 validations/month (monthly reset), Founder $19/mo / $190/yr; Paywall modal with billing toggle
+- [x] /api/stripe/checkout + /api/stripe/verify (server-verified session before Pro activates); /upgrade/success page; Founder chip in navbar; demo unlock when Stripe unconfigured
+- [x] Pushed to github.com/zazzyguy8-ai/startup-for90days (render.yaml blueprint ready; user connects in Render dashboard + sets STRIPE_*/OPENAI env vars)
+
+## Feature: Startup Builder (agentic)
+- [x] Live preview iframe of the generated startup (lib/preview-generator.ts, srcDoc, desktop/mobile toggle, working demo form)
+- [x] Builder bar: natural-language instruction → /api/build revise → spec diff → file-by-file rebuild animation → preview refresh → persisted
+- [x] Demo instruction parser (names/colors/taglines, EN+SK); full NL revisions with OPENAI_API_KEY
+- [x] Verified live: color change, rename ("Suppo"), tagline change all applied + persisted; zero console errors; production build clean
+
 ## Feature: Real verification + realistic pacing
 - [x] /api/validate second pass: skeptical AI reviewer (VERIFY_SYSTEM_PROMPT) corrects scores, market sizing, generic advice when OPENAI_API_KEY is set (opt out: OPENAI_VERIFY=0)
 - [x] Validate page: personalized 8-stage analysis (~30-35s) — stages derived from the user's idea/audience/competitors, live terminal-style activity log, % progress, elapsed timer; navigation gated on BOTH the API result and the visible sequence
