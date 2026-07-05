@@ -92,6 +92,25 @@ const BUILD_SECTION_SCHEMAS: Record<string, string> = {
 }`,
 };
 
+export function buildRevisePrompt(
+  specJson: string,
+  instruction: string,
+  input: IdeaInput
+): string {
+  return `You are the AI builder behind a startup-building product. The user is looking at their generated app and gave you an instruction to change it.
+
+CURRENT PROJECT SPEC (JSON):
+${specJson}
+
+STARTUP CONTEXT: ${input.idea.slice(0, 200)} — for ${input.audience}
+
+USER INSTRUCTION: "${instruction}"
+
+Apply the instruction to the spec. You may change: appName, tagline, description, accentColor, resultNoun, inputFields, exampleInput, corePrompt, resultSections. Keep everything the user didn't ask to change. The corePrompt must keep {{fieldId}} placeholders matching inputFields ids.
+
+Return JSON exactly: { "spec": <the full updated ProjectSpec>, "changes": string[] (short human-readable list of what you changed) }`;
+}
+
 export function buildKitSectionPrompt(
   section: string,
   input: IdeaInput,

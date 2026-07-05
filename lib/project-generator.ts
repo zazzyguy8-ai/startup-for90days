@@ -814,6 +814,60 @@ Push to GitHub and import into [Vercel](https://vercel.com/new) (zero config), o
   ];
 }
 
+// Demo-mode instruction parser for the builder: applies what it can
+// understand (name, color, tagline) without an AI key.
+const COLOR_WORDS: Record<string, string> = {
+  green: "#10b981", zelen: "#10b981",
+  blue: "#3b82f6", modr: "#3b82f6",
+  red: "#ef4444", cerven: "#ef4444", červen: "#ef4444",
+  purple: "#8b5cf6", fialov: "#8b5cf6",
+  orange: "#f97316", oranzov: "#f97316", oranžov: "#f97316",
+  pink: "#ec4899", ruzov: "#ec4899", ružov: "#ec4899",
+  teal: "#14b8a6", cyan: "#06b6d4", tyrkys: "#06b6d4",
+  yellow: "#f59e0b", zlt: "#f59e0b", žlt: "#f59e0b", gold: "#f59e0b",
+  indigo: "#6366f1", black: "#18181b", ciern: "#18181b", čiern: "#18181b",
+};
+
+export function mockReviseSpec(
+  spec: ProjectSpec,
+  instruction: string
+): { spec: ProjectSpec; changes: string[] } {
+  const next: ProjectSpec = JSON.parse(JSON.stringify(spec));
+  const changes: string[] = [];
+  const lower = instruction.toLowerCase();
+
+  const nameMatch = instruction.match(
+    /(?:call it|name it|rename (?:it )?to|nazvi to|premenuj (?:to )?na|volaj to)\s+["']?([A-Za-z][\w.-]{1,28}?)["']?(?=$|[,.;!]|\s+(?:and|a|aby|so)\b)/i
+  );
+  if (nameMatch) {
+    next.appName = nameMatch[1].trim();
+    changes.push(`Renamed the product to ${next.appName}`);
+  }
+
+  for (const [word, hex] of Object.entries(COLOR_WORDS)) {
+    if (lower.includes(word)) {
+      next.accentColor = hex;
+      changes.push(`Changed the brand color to ${hex}`);
+      break;
+    }
+  }
+
+  const taglineMatch = instruction.match(
+    /tagline(?:\s+(?:to|na))?[:\s]+["']?([^"'\n]{5,80}?)["']?\s*(?:$|[.;!])/i
+  );
+  if (taglineMatch) {
+    next.tagline = taglineMatch[1].trim();
+    changes.push(`Updated the tagline to “${next.tagline}”`);
+  }
+
+  if (changes.length === 0) {
+    changes.push(
+      "Demo mode understands names, colors and taglines — add an OPENAI_API_KEY for full natural-language revisions (new sections, copy rewrites, features)."
+    );
+  }
+  return { spec: next, changes };
+}
+
 // Demo-mode ProjectSpec derived from the idea + report.
 export function mockProjectSpec(
   ideaText: string,

@@ -44,7 +44,7 @@ const SECTIONS: {
 }[] = [
   { id: "blueprint", label: "Product Blueprint", step: "Step 1", icon: FileText, desc: "PRD, user stories, schema, API, auth, file structure" },
   { id: "tasks", label: "Development Tasks", step: "Step 2", icon: KanbanSquare, desc: "Complete task board across the whole stack" },
-  { id: "project", label: "Your App (full code)", step: "Step 3", icon: FolderGit2, desc: "The complete runnable codebase — download & launch" },
+  { id: "project", label: "Startup Builder", step: "Step 3", icon: FolderGit2, desc: "Your app, built live — preview, reshape, download" },
   { id: "code", label: "Upgrade Modules", step: "Step 4", icon: Code2, desc: "Auth, usage metering, Stripe webhooks for scale" },
   { id: "prompts", label: "AI Builder", step: "Step 5", icon: Bot, desc: "Copy-paste prompts for Cursor, Claude Code, Lovable…" },
   { id: "pages", label: "Landing & Legal", step: "Step 6", icon: Globe, desc: "Landing, pricing, FAQ, terms, privacy, SEO, blog" },
@@ -457,7 +457,11 @@ export default function BuildClient({ id }: { id: string }) {
                 )}
                 {active === "project" && (
                   <FullProjectView
+                    idea={idea}
                     project={kit.project}
+                    onSave={async (p) => {
+                      await persist({ ...kit, project: p });
+                    }}
                     onGenerate={() => regenerate("project")}
                     generating={regenerating === "project"}
                   />
