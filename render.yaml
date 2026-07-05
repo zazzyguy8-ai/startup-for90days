@@ -1,0 +1,27 @@
+# Render Blueprint — deploys the app as a Node web service.
+# Dashboard: https://dashboard.render.com → New → Blueprint → point at this repo.
+services:
+  - type: web
+    name: startup-for90days
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 22.12.0
+      - key: OPENAI_API_KEY
+        sync: false # set in Render dashboard (leave empty for demo mode)
+      - key: OPENAI_MODEL
+        value: gpt-4o
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false # set in Render dashboard (leave empty for demo mode)
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false # set in Render dashboard to enable the paywall
+      - key: STRIPE_PRICE_MONTHLY
+        sync: false
+      - key: STRIPE_PRICE_ANNUAL
+        sync: false
